@@ -5,17 +5,14 @@ const ListElement = ({ country }) => {
   const [show, setShow] = useState(false)
   const [buttonText, setButtonText] = useState("show")
 
-  const handleClick = () => {
+  const showOrHide = () => {
     setShow(!show)
-    if (buttonText === "show")
-      setButtonText("hide")
-    else
-      setButtonText("show")
+    setButtonText(buttonText === "show" ? "hide" : "show")
   }
 
   return (
     <div>
-      <div>{country.name} <button onClick={handleClick}>{buttonText}</button><br /></div>
+      <div>{country.name} <button onClick={showOrHide}>{buttonText}</button><br /></div>
       <SingleCountryInfo country={country} show={show} />
     </div>
   )
