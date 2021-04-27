@@ -1,27 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
-  /* const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]) */
+
   useEffect(() => {
-    //console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        //console.log('promise fulfilled')
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }, [])
-  //console.log('render', persons.length, 'persons')
 
   const [newName, setNewName] = useState('')
   const handleNameChange = (event) => {
@@ -36,18 +28,51 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    if (persons.find(person => person.name === newName) !== undefined) {
-      window.alert(`${newName} is already added to phonebook`)
+    if (newName.length === 0 || newNumber.length === 0) {
+      return
+    }
+
+    const p = persons.find(person => person.name === newName)
+    if (p !== undefined) {
+      // If the person's name already exists
+
+      //window.alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${p.name} is already added to phonebook, replace the old number with a new one?`)) {
+        const changedPerson = { ...p, number: newNumber }
+
+        personService
+          .update(p.id, changedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id === p.id ? returnedPerson : person))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
     }
     else {
+      // If the person's name is not already present, create a new person
+
       const newPerson = {
         name: newName,
         number: newNumber,
         id: persons.length + 1
       }
-      setPersons(persons.concat(newPerson))
-      setNewName('')
-      setNewNumber('')
+
+      personService
+        .create(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
+    }
+  }
+
+  const removePerson = (personToRemove) => {
+    if (window.confirm(`Delete ${personToRemove.name} ?`)) {
+      personService
+        .remove(personToRemove.id)
+        .then(setPersons(persons.filter(person => person.id !== personToRemove.id)))
     }
   }
 
@@ -80,7 +105,7 @@ const App = () => {
 
         buttonText="add" />
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} onClickDelete={removePerson} />
     </div>
   )
 }
