@@ -5,8 +5,19 @@ POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
 
 {
-    "title": "Something about Rust",
-    "author": "Amos",
-    "url": "https://fasterthanli.me",
-    "likes": 21
+    "title": "Test blog",
+    "author": "REST API",
+    "url": "https://localhost:PORT",
+    "likes": 1
+}
+
+###
+DELETE http://localhost:3003/api/blogs/6100ec6d322dc93c74f89719
+
+###
+PUT http://localhost:3003/api/blogs/60ffa6b17276cd45dfe671e1 HTTP/1.1
+content-type: application/json
+
+{
+    "likes": "21"
 }
