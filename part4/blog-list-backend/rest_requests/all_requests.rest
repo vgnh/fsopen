@@ -1,22 +1,26 @@
 GET http://localhost:3003/api/blogs
+authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjEwMmIyMDRhMDMyZjg5MjhlNjJhZjUzIiwiaWF0IjoxNjI3NTc0OTc4LCJleHAiOjE2Mjc1Nzg1Nzh9.JcR39u8z8f6-fPMs9WRueSOTI7_9fYoL_Oxf-NmMBfw
 
 ###
 POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
+authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjEwMmIyMDRhMDMyZjg5MjhlNjJhZjUzIiwiaWF0IjoxNjI3NTc0OTc4LCJleHAiOjE2Mjc1Nzg1Nzh9.JcR39u8z8f6-fPMs9WRueSOTI7_9fYoL_Oxf-NmMBfw
 
 {
-    "title": "Test blog",
-    "author": "REST API",
-    "url": "https://localhost:PORT",
+    "title": "asd",
+    "author": "TESTTTT",
+    "url": "https://onewhoremai.ns",
     "likes": 1
 }
 
 ###
-DELETE http://localhost:3003/api/blogs/6100ec6d322dc93c74f89719
+DELETE http://localhost:3003/api/blogs/6102d304109c26b760be1d9e
+authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjEwMmIyMDRhMDMyZjg5MjhlNjJhZjUzIiwiaWF0IjoxNjI3NTc0OTc4LCJleHAiOjE2Mjc1Nzg1Nzh9.JcR39u8z8f6-fPMs9WRueSOTI7_9fYoL_Oxf-NmMBfw
 
 ###
 PUT http://localhost:3003/api/blogs/60ffa6b17276cd45dfe671e1 HTTP/1.1
 content-type: application/json
+authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjEwMmIyMDRhMDMyZjg5MjhlNjJhZjUzIiwiaWF0IjoxNjI3NTc0OTc4LCJleHAiOjE2Mjc1Nzg1Nzh9.JcR39u8z8f6-fPMs9WRueSOTI7_9fYoL_Oxf-NmMBfw
 
 {
     "likes": "21"
@@ -32,5 +36,14 @@ content-type: application/json
 {
     "username": "hellas",
     "name": "Arto Hellas",
+    "password": "qwerty"
+}
+
+###
+POST http://localhost:3003/api/login HTTP/1.1
+content-type: application/json
+
+{
+    "username": "hellas",
     "password": "qwerty"
 }

@@ -1,8 +1,11 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const helper = require('./blog_api_helper.js')
+const user_helper = require('./user_api_helper.js')
 const Blog = require('../models/blog.js')
+const User = require('../models/user.js')
 const app = require('../app.js')
+const jwt = require('jsonwebtoken')
 
 const api = supertest(app)
 
@@ -12,16 +15,28 @@ beforeEach(async () => {
   const promiseArray = blogObjects.map(blog => blog.save())
   await Promise.all(promiseArray) */
   await Blog.insertMany(helper.initialBlogs)
+
+  await User.deleteMany({})
+  await User.insertMany(user_helper.initialUsers)
 })
+
+const tokenFun = async () => {
+  const user = await User.findOne({ username: 'hellas' })
+  const userForToken = {
+    username: user.username,
+    id: user.id
+  }
+  return jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60 * 60 })
+}
 
 describe('when there is initially some blogs saved', () => {
   test('correct number of blog posts', async () => {
-    const response = await api.get('/api/blogs')
+    const response = await api.get('/api/blogs').set('authorization', `bearer ${await tokenFun()}`)
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
 
   test('unique identifier is named id', async () => {
-    const response = await api.get('/api/blogs')
+    const response = await api.get('/api/blogs').set('authorization', `bearer ${await tokenFun()}`)
     expect(response.body[0].id).toBeDefined()
   })
 })
@@ -38,6 +53,7 @@ describe('addition of new blog', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('authorization', `bearer ${await tokenFun()}`)
       .expect(201)
       .expect('Content-Type', /application\/json/)
     const blogsAfterPost = await helper.blogsInDb()
@@ -58,6 +74,7 @@ describe('addition of new blog', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('authorization', `bearer ${await tokenFun()}`)
       .expect(201)
       .expect('Content-Type', /application\/json/)
     const blogsAfterPost = await helper.blogsInDb()
@@ -75,13 +92,16 @@ describe('addition of new blog', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('authorization', `bearer ${await tokenFun()}`)
       .expect(400)
   })
 })
 
 describe('deletion of a blog', () => {
   test('deleting a blog is successful', async () => {
-    /* const newBlog = {
+    const token = await tokenFun()
+
+    const newBlog = {
       title: 'Third blog',
       author: 'Jest test',
       url: 'http://localhost:PORT',
@@ -90,20 +110,23 @@ describe('deletion of a blog', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('authorization', `bearer ${token}`)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const blogsAfterPost = await helper.blogsInDb() */
-    const blogs =  await helper.blogsInDb()
+    const blogsAfterPost = await helper.blogsInDb()
     await api
-      .delete(`/api/blogs/${blogs[1].id}`)
+      .delete(`/api/blogs/${blogsAfterPost[2].id}`)
+      .set('authorization', `bearer ${token}`)
       .expect(204)
   })
 })
 
 describe('updating a blog', () => {
   test('updating number of likes is successful', async () => {
-    /* const newBlog = {
+    const token = await tokenFun()
+
+    const newBlog = {
       title: 'Third blog',
       author: 'Jest test',
       url: 'http://localhost:PORT',
@@ -112,20 +135,22 @@ describe('updating a blog', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('authorization', `bearer ${token}`)
       .expect(201)
       .expect('Content-Type', /application\/json/)
-    const blogsAfterPost = await helper.blogsInDb() */
-    const blogs =  await helper.blogsInDb()
+
+    const blogsAfterPost = await helper.blogsInDb()
     const requestBody = {
       likes: 30
     }
     await api
-      .put(`/api/blogs/${blogs[1].id}`)
+      .put(`/api/blogs/${blogsAfterPost[2].id}`)
       .send(requestBody)
+      .set('authorization', `bearer ${token}`)
       .expect(200)
     const blogsAfterPut = await helper.blogsInDb()
 
-    expect(blogsAfterPut[1].likes).toBe(30)
+    expect(blogsAfterPut[2].likes).toBe(30)
   })
 })
 
