@@ -95,6 +95,20 @@ describe('addition of new blog', () => {
       .set('authorization', `bearer ${await tokenFun()}`)
       .expect(400)
   })
+
+  test('adding fails with 401 if token is not provided', async () => {
+    const newBlog = {
+      title: 'Third blog',
+      author: 'Jest test',
+      url: 'http://localhost:PORT',
+      likes: 1
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+  })
 })
 
 describe('deletion of a blog', () => {

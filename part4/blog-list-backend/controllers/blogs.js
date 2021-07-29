@@ -11,6 +11,12 @@ blogsRouter.post('/', async (request, response, next) => {
 
   const user = request.user // middleware
 
+  if(!user) {
+    return response.status(401).json({
+      error: 'Unauthorized. Token not provided.'
+    })
+  }
+
   const blog = new Blog({
     title: body.title,
     author: body.author,
