@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CreateNewBlog = ({handleCreateBlog, blogTitle, setBlogTitle, blogAuthor, setBlogAuthor, blogUrl, setBlogUrl}) => {
+const CreateNewBlog = ({handleCreateBlog, blogTitle, handleBlogTitleChange, blogAuthor, handleBlogAuthorChange, blogUrl, handleBlogUrlChange}) => {
   return (
     <div>
       <h2>create new</h2>
@@ -11,7 +11,7 @@ const CreateNewBlog = ({handleCreateBlog, blogTitle, setBlogTitle, blogAuthor, s
             type="text"
             value={blogTitle}
             name="blogTitle"
-            onChange={({ target }) => setBlogTitle(target.value)}
+            onChange={handleBlogTitleChange}
           />
         </div>
         <div>
@@ -20,7 +20,7 @@ const CreateNewBlog = ({handleCreateBlog, blogTitle, setBlogTitle, blogAuthor, s
             type="text"
             value={blogAuthor}
             name="blogAuthor"
-            onChange={({ target }) => setBlogAuthor(target.value)}
+            onChange={handleBlogAuthorChange}
           />
         </div>
         <div>
@@ -29,7 +29,7 @@ const CreateNewBlog = ({handleCreateBlog, blogTitle, setBlogTitle, blogAuthor, s
             type="text"
             value={blogUrl}
             name="blogUrl"
-            onChange={({ target }) => setBlogUrl(target.value)}
+            onChange={handleBlogUrlChange}
           />
         </div>
         <button type="submit">create</button>

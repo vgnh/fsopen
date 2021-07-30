@@ -8,7 +8,9 @@ import loginService from './services/login.js'
 
 const App = () => {
   const [username, setUsername] = useState('')
+  const handleUsernameChange = (event) => { setUsername(event.target.value) }
   const [password, setPassword] = useState('')
+  const handlePasswordChange = (event) => { setPassword(event.target.value) }
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const populateBlogs = async () => {
@@ -20,8 +22,11 @@ const App = () => {
   const [errorStatus, setErrorStatus] = useState(false)
 
   const [blogTitle, setBlogTitle] = useState('')
+  const handleBlogTitleChange = (event) => { setBlogTitle(event.target.value) }
   const [blogAuthor, setBlogAuthor] = useState('')
+  const handleBlogAuthorChange = (event) => { setBlogAuthor(event.target.value) }
   const [blogUrl, setBlogUrl] = useState('')
+  const handleBlogUrlChange = (event) => { setBlogUrl(event.target.value) }
   const handleCreateBlog = async (event) => {
     event.preventDefault()
 
@@ -93,8 +98,8 @@ const App = () => {
         <h2>log in to application</h2>
         <Notification message={notificationMessage} error={errorStatus} />
         <LogInForm
-          username={username} setUsername={setUsername}
-          password={password} setPassword={setPassword}
+          username={username} handleUsernameChange={handleUsernameChange}
+          password={password} handlePasswordChange={handlePasswordChange}
           handleLogin={handleLogin} />
       </div>
     )
@@ -106,9 +111,9 @@ const App = () => {
       <Notification message={notificationMessage} error={errorStatus} />
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
       <CreateNewBlog
-        blogTitle={blogTitle} setBlogTitle={setBlogTitle}
-        blogAuthor={blogAuthor} setBlogAuthor={setBlogAuthor}
-        blogUrl={blogUrl} setBlogUrl={setBlogUrl}
+        blogTitle={blogTitle} handleBlogTitleChange={handleBlogTitleChange}
+        blogAuthor={blogAuthor} handleBlogAuthorChange={handleBlogAuthorChange}
+        blogUrl={blogUrl} handleBlogUrlChange={handleBlogUrlChange}
         handleCreateBlog={handleCreateBlog} />
       <br />
       {
