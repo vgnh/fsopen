@@ -1,16 +1,16 @@
 import React from 'react'
 
-const CreateNew = ({createNewBlog, blogTitle, setBlogTitle, blogAuthor, setBlogAuthor, blogUrl, setBlogUrl}) => {
+const CreateNewBlog = ({handleCreateBlog, blogTitle, setBlogTitle, blogAuthor, setBlogAuthor, blogUrl, setBlogUrl}) => {
   return (
     <div>
       <h2>create new</h2>
-      <form onSubmit={createNewBlog}>
+      <form onSubmit={handleCreateBlog}>
         <div>
           title: &nbsp;
           <input
             type="text"
             value={blogTitle}
-            name="Blog Title"
+            name="blogTitle"
             onChange={({ target }) => setBlogTitle(target.value)}
           />
         </div>
@@ -19,7 +19,7 @@ const CreateNew = ({createNewBlog, blogTitle, setBlogTitle, blogAuthor, setBlogA
           <input
             type="text"
             value={blogAuthor}
-            name="Blog Author"
+            name="blogAuthor"
             onChange={({ target }) => setBlogAuthor(target.value)}
           />
         </div>
@@ -28,7 +28,7 @@ const CreateNew = ({createNewBlog, blogTitle, setBlogTitle, blogAuthor, setBlogA
           <input
             type="text"
             value={blogUrl}
-            name="Blog Url"
+            name="blogUrl"
             onChange={({ target }) => setBlogUrl(target.value)}
           />
         </div>
@@ -38,4 +38,4 @@ const CreateNew = ({createNewBlog, blogTitle, setBlogTitle, blogAuthor, setBlogA
   )
 }
 
-export default CreateNew
+export default CreateNewBlog

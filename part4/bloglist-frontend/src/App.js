@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog.js'
 import LogInForm from './components/LogInForm.js'
 import Notification from './components/Notification.js'
-import CreateNew from './components/CreateNew.js'
+import CreateNewBlog from './components/CreateNewBlog.js'
 import blogService from './services/blogs.js'
 import loginService from './services/login.js'
 
@@ -11,7 +11,6 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
-
   const populateBlogs = async () => {
     const blogs = await blogService.getAll()
     setBlogs(blogs)
@@ -23,7 +22,7 @@ const App = () => {
   const [blogTitle, setBlogTitle] = useState('')
   const [blogAuthor, setBlogAuthor] = useState('')
   const [blogUrl, setBlogUrl] = useState('')
-  const createNewBlog = async (event) => {
+  const handleCreateBlog = async (event) => {
     event.preventDefault()
 
     const newBlog = {
@@ -38,34 +37,17 @@ const App = () => {
     setBlogUrl('')
     await populateBlogs()
 
-    //setErrorStatus(true)
     setNotificationMessage(`a new blog ${blogTitle} by ${blogAuthor} added`)
     setTimeout(() => {
       setNotificationMessage(null)
-      //setErrorStatus(false)
     }, 5000)
   }
 
-  useEffect(() => {
-    const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
-    if (loggedInUserJSON) {
-      const user = JSON.parse(loggedInUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
-
-  useEffect(async () => {
-    await populateBlogs()
-  }, [])
-
   const handleLogin = async (event) => {
     event.preventDefault()
+
     try {
-      const user = await loginService.login({
-        username,
-        password
-      })
+      const user = await loginService.login({ username, password })
 
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
       setUser(user)
@@ -89,43 +71,50 @@ const App = () => {
     setUser(null)
   }
 
+  useEffect(() => {
+    const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
+    if (loggedInUserJSON) {
+      const user = JSON.parse(loggedInUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
+  useEffect(() => {
+    const reloadBlogs = async () => {
+      await populateBlogs()
+    }
+    reloadBlogs()
+  }, [])
+
+  if (user === null) {
+    return (
+      <div>
+        <h2>log in to application</h2>
+        <Notification message={notificationMessage} error={errorStatus} />
+        <LogInForm
+          username={username} setUsername={setUsername}
+          password={password} setPassword={setPassword}
+          handleLogin={handleLogin} />
+      </div>
+    )
+  }
+
   return (
-    <>
+    <div>
+      <h2>blogs</h2>
+      <Notification message={notificationMessage} error={errorStatus} />
+      <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
+      <CreateNewBlog
+        blogTitle={blogTitle} setBlogTitle={setBlogTitle}
+        blogAuthor={blogAuthor} setBlogAuthor={setBlogAuthor}
+        blogUrl={blogUrl} setBlogUrl={setBlogUrl}
+        handleCreateBlog={handleCreateBlog} />
+      <br />
       {
-        user === null
-          ? (
-            <LogInForm
-              username={username}
-              setUsername={setUsername}
-              password={password}
-              setPassword={setPassword}
-              handleLogin={handleLogin}
-              notificationMessage={notificationMessage}
-              errorStatus={errorStatus} />
-          )
-          : (
-            <div>
-              <h2>blogs</h2>
-              <Notification message={notificationMessage} error={errorStatus} />
-              <p>
-                {user.name} logged in <button onClick={handleLogout}>logout</button>
-              </p>
-              <CreateNew
-                createNewBlog={createNewBlog}
-                blogTitle={blogTitle}
-                setBlogTitle={setBlogTitle}
-                blogAuthor={blogAuthor}
-                setBlogAuthor={setBlogAuthor}
-                blogUrl={blogUrl}
-                setBlogUrl={setBlogUrl} />
-              <br />
-              {
-                blogs.map(blog => <Blog key={blog.id} blog={blog} />)
-              }
-            </div>
-          )
+        blogs.map(blog => <Blog key={blog.id} blog={blog} />)
       }
-    </>
+    </div>
   )
 }
 
