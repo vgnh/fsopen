@@ -1,11 +1,11 @@
 import React from 'react'
 
-const Notification = ({ message, error }) => {
+const Notification = ({ message, color }) => {
   if (message === null) {
     return null
   }
 
-  const notificationColor = error ? 'red' : 'green'
+  const notificationColor = color
 
   const notificationStyle = {
     color: notificationColor,
