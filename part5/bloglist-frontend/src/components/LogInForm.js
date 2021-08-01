@@ -4,7 +4,7 @@ const LogInForm = ({ logIn }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleLogin = async (event) => {
+  const handleLogin = (event) => {
     event.preventDefault()
 
     logIn({ username, password })
