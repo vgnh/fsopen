@@ -5,7 +5,7 @@ const Notification = ({ message, color }) => {
     return null
   }
 
-  const notificationColor = color
+  const notificationColor = color === 'green' ? 'rgb(0, 255, 0)' : 'rgb(255, 0, 0)'
 
   const notificationStyle = {
     color: notificationColor,
@@ -19,7 +19,7 @@ const Notification = ({ message, color }) => {
   }
 
   return (
-    <div style={notificationStyle}>
+    <div style={notificationStyle} className="notification">
       {message}
     </div>
   )

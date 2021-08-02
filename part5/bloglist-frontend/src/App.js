@@ -89,19 +89,14 @@ const App = () => {
 
   // App execution starts here
   useEffect(() => {
+    const reloadBlogs = async () => { await populateBlogs() }
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON)
       setUser(user)
       blogService.setToken(user.token)
+      reloadBlogs()
     }
-  }, [])
-
-  useEffect(() => {
-    const reloadBlogs = async () => {
-      await populateBlogs()
-    }
-    reloadBlogs()
   }, [])
 
   if (user === null) {
@@ -118,7 +113,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <Notification message={notificationMessage} color={notificationColor} />
-      <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
+      <p>{user.name} logged in <button onClick={handleLogout} id="logoutButton">logout</button></p>
       {
         createNewBlogForm()
       }
