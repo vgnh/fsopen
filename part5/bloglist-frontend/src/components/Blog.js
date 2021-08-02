@@ -28,9 +28,9 @@ const Blog = ({ blog, increaseLikesOf, removeBlog, visibilityOfRemove }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blogCard'>
       {blog.title} {blog.author} <button onClick={handleShowInfo}>{showInfo ? 'hide' : 'view'}</button>
-      <div style={infoStyle}>
+      <div style={infoStyle} className='blogInfoCard'>
         {blog.url}<br />
         likes {blog.likes} <button onClick={handleLikes}>like</button><br />
         {blog.user.name}<br />
